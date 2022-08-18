@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node wishlist-server/app.js",
     "dev": "nodemon wishlist-server/app.js"
   },
   "repository": {

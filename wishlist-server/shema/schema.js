@@ -63,7 +63,19 @@ const Query = new GraphQLObjectType({
             resolve(parent, args) {
                 return users.find(user => user.id == args.id);
             }
-        }
+        },
+        getAllWishes: {
+            type: new GraphQLList(WishType),
+            resolve(parent, args) {
+                return wishes;
+            }
+        },
+        getAllUsers: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args) {
+                return users;
+            }
+        },
     }
 });
 

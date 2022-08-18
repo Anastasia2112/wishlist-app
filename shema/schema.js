@@ -1,10 +1,12 @@
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLList } = graphql;
 
 const wishes = [
-    { id: '1', name: 'Пылесос', link: 'http...', price: 18000, img: 'допустим, картинка'},
-    { id: '2', name: 'Кроссовки', link: 'http...', price: 5000, img: 'допустим, картинка'},
-    { id: '3', name: 'Машина', link: 'http...', price: 350000, img: 'допустим, картинка'},
+    { id: '1', name: 'Пылесос', link: 'http...', price: 18000, img: 'допустим, картинка', userId: '2'},
+    { id: '2', name: 'Кроссовки', link: 'http...', price: 5000, img: 'допустим, картинка', userId: '1'},
+    { id: '3', name: 'Машина', link: 'http...', price: 350000, img: 'допустим, картинка', userId: '2'},
+    { id: '4', name: 'Сумка', link: 'http...', price: 350000, img: 'допустим, картинка', userId: '2'},
+    { id: '5', name: 'Дрель', link: 'http...', price: 350000, img: 'допустим, картинка', userId: '1'},
 ];
 
 const users = [
@@ -20,6 +22,12 @@ const WishType = new GraphQLObjectType({
         link: { type: GraphQLString },
         price: { type: GraphQLInt },
         img: { type: GraphQLString },
+        user: {
+            type: UserType,
+            resolve(parent, args) {
+                return users.find(user => user.id === parent.userId);
+            }
+        }
     }),
 });
 
@@ -30,6 +38,12 @@ const UserType = new GraphQLObjectType({
         firstName: { type: GraphQLString },
         lastname: { type: GraphQLString },
         email: { type: GraphQLString },
+        wishes: {
+            type: new GraphQLList(WishType),
+            resolve(parent, args) {
+                return wishes.filter(wish => wish.userId == parent.id);
+            }
+        }
     }),
 });
 
@@ -40,14 +54,14 @@ const Query = new GraphQLObjectType({
             type: WishType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                return wishes.find(wish => wish.id == args.id)
+                return wishes.find(wish => wish.id == args.id);
             }
         },
         getUserById: {
             type: UserType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                return users.find(user => user.id == args.id)
+                return users.find(user => user.id == args.id);
             }
         }
     }
